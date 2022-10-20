@@ -1,29 +1,38 @@
 use std::io;
 
 fn main() {
-    let mut unit = String::new();
-    let mut temp = 0.0;
+    loop {
+        let unit = read_unit();
 
-    println!("What is the desired temperature unit? Enter Celsius or Fahrenheit.");
-
-    unit = read_unit();
-
-    println!("What is the temperature? Please insert numbers only.");
-
-    temp = read_temp();
-
-    println!("You entered {temp} °{unit}.");
+        if unit.starts_with("f") {
+            let temp = read_temp();
+            celsius_to_fahrenheit(temp);
+            break;
+        } else if unit.starts_with("c") {
+            let temp = read_temp();
+            fahrenheit_to_celsius(temp);
+            break;
+        } else {
+            println!("Please enter a valid unit.");
+            continue;
+        }
+    }
 }
 
 fn read_unit() -> String {
+    println!("What is the desired temperature unit? Enter Celsius or Fahrenheit.");
+
     let mut input = String::new();
     io::stdin()
         .read_line(&mut input)
         .expect("Failed to read line");
-    return input.trim().to_string();
+
+    return input.trim().to_lowercase();
 }
 
 fn read_temp() -> f64 {
+    println!("What is the temperature? Please insert numbers only.");
+
     let mut attempts = 0;
     loop {
         let mut input = String::new();
@@ -45,4 +54,18 @@ fn read_temp() -> f64 {
         };
         return input;
     }
+}
+
+fn celsius_to_fahrenheit(temp: f64) {
+    let temp = temp * 1.8 + 32.0;
+    print_results(temp, "Fahrenheit");
+}
+
+fn fahrenheit_to_celsius(temp: f64) {
+    let temp = (temp - 32.0) / 1.8;
+    print_results(temp, "Celsius");
+}
+
+fn print_results(temp: f64, unit: &str) {
+    println!("Result: {temp} °{unit}")
 }
